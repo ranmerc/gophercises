@@ -11,6 +11,11 @@ import (
 	"strings"
 )
 
+type problem struct {
+	question string
+	answer   string
+}
+
 var fileName string
 
 func init() {
@@ -28,8 +33,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	questions := make([]string, 0)
-	answers := make([]string, 0)
+	problems := make([]problem, 0)
 
 	csvReader := csv.NewReader(csvFile)
 	for {
@@ -42,13 +46,15 @@ func main() {
 			break
 		}
 
-		questions = append(questions, line[0])
-		answers = append(answers, line[1])
+		problems = append(problems, problem{
+			question: line[0],
+			answer:   strings.TrimSpace(line[1]),
+		})
 	}
 
 	var score uint8
-	for i, question := range questions {
-		fmt.Printf("Question %d: %s\n", i+1, question)
+	for i, problem := range problems {
+		fmt.Printf("Question %d: %s\n", i+1, problem.question)
 		fmt.Print("Your answer: ")
 
 		consoleReader := bufio.NewReader(os.Stdin)
@@ -59,13 +65,13 @@ func main() {
 			continue
 		}
 
-		answer = strings.TrimRight(answer, "\n")
-		if strings.EqualFold(answer, answers[i]) {
+		answer = strings.TrimSpace(answer)
+		if strings.EqualFold(answer, problem.answer) {
 			score++
 		}
 
 		fmt.Println()
 	}
 
-	fmt.Printf("Your score is %d/%d!\n", score, len(questions))
+	fmt.Printf("Your score is %d/%d!\n", score, len(problems))
 }
