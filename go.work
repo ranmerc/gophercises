@@ -1,3 +1,6 @@
 go 1.21.1
 
-use ./1_quiz
+use (
+	./1_quiz
+	./2_urlshort
+)
