@@ -3,4 +3,5 @@ go 1.21.1
 use (
 	./1_quiz
 	./2_urlshort
+	./3_adventure
 )

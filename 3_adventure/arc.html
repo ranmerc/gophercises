@@ -1,0 +1,50 @@
+<head>
+    <title>{{.Title}}</title>
+    <style>
+        main {
+            max-width: 65ch;
+            margin: auto;
+        }
+
+        h1 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        p {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            text-wrap: balance;
+        }
+
+        a {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            color: black;
+            padding: 0.5rem;
+            border: 1px solid black;
+            max-width: 50ch;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            row-gap: 1rem;
+            place-content: center;
+        }
+    </style>
+</head>
+
+<main>
+    <h1>{{.Title}}</h1>
+    {{range .Story}}
+    <p>{{.}}</p>
+    {{end}}
+    <div class="options">
+        {{range .Options}}
+        <a href="/{{.Arc}}">
+            {{.Text}}
+        </a>
+        {{end}}
+    </div>
+</main>
