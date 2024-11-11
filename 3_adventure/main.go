@@ -2,40 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"text/template"
 )
-
-// Option is an arc option. Arc is the the arc to go to next and text is shown to user.
-type Option struct {
-	Text string `json:"text"`
-	Arc  string `json:"arc"`
-}
-
-// Arc is a story arc.
-type Arc struct {
-	Title   string   `json:"title"`
-	Story   []string `json:"story"`
-	Options []Option `json:"options"`
-}
-
-// Arcs is a set of story arcs.
-type Arcs map[string]Arc
-
-// ArcHandler handles the http request for a particular arc.
-type ArcHandler struct {
-	Pattern  string
-	Title    string
-	Arc      Arc
-	Template *template.Template
-}
-
-// ServeHTTP ...
-func (a ArcHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a.Template.Execute(w, a.Arc)
-}
 
 // fatal is used when an unrecoverable error is encountered.
 func fatal(msg string, err error) {
@@ -43,8 +15,18 @@ func fatal(msg string, err error) {
 	os.Exit(0)
 }
 
+var jsonFile string
+var port int
+
+func init() {
+	flag.IntVar(&port, "port", 8080, "the port to run the web server on")
+	flag.StringVar(&jsonFile, "file", "gopher.json", "the JSON file name with the story in it")
+}
+
 func main() {
-	file, err := os.ReadFile("gopher.json")
+	flag.Parse()
+
+	file, err := os.ReadFile(jsonFile)
 	if err != nil {
 		fatal("Failed to read json file", err)
 	}
@@ -69,18 +51,13 @@ func main() {
 	for name, arc := range arcs {
 		pattern := fmt.Sprintf("/%s", name)
 
-		arcHandlers = append(arcHandlers, ArcHandler{
-			Template: tmpl,
-			Pattern:  pattern,
-			Title:    arc.Title,
-			Arc:      arc,
-		})
+		arcHandlers = append(arcHandlers, NewArcHandler(pattern, arc, WithTemplate(tmpl)))
 	}
 
 	for _, handler := range arcHandlers {
 		mux.Handle(handler.Pattern, handler)
 	}
 
-	fmt.Println("Serving on http://localhost:8080")
-	http.ListenAndServe(":8080", mux)
+	fmt.Printf("Serving on http://localhost:%d\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), mux)
 }

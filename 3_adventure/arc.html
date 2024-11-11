@@ -1,4 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}}</title>
     <style>
         main {
@@ -17,6 +22,7 @@
         }
 
         a {
+            display: inline-block;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-decoration: none;
             text-align: center;
@@ -31,20 +37,30 @@
             flex-direction: column;
             row-gap: 1rem;
             place-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-indent: 0;
         }
     </style>
 </head>
 
-<main>
-    <h1>{{.Title}}</h1>
-    {{range .Story}}
-    <p>{{.}}</p>
-    {{end}}
-    <div class="options">
-        {{range .Options}}
-        <a href="/{{.Arc}}">
-            {{.Text}}
-        </a>
+<body>
+    <main>
+        <h1>{{.Title}}</h1>
+        {{range .Story}}
+        <p>{{.}}</p>
         {{end}}
-    </div>
-</main>
+        <ul class="options">
+            {{range .Options}}
+            <li>
+                <a href="/{{.Arc}}">
+                    {{.Text}}
+                </a>
+            </li>
+            {{end}}
+        </ul>
+    </main>
+</body>
+
+</html>
