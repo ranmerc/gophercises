@@ -5,4 +5,5 @@ use (
 	./2_urlshort
 	./3_adventure
 	./4_link
+	./5_sitemap
 )
