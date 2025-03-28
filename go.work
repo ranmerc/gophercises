@@ -1,4 +1,4 @@
-go 1.23.3
+go 1.24.1
 
 use (
 	./1_quiz
@@ -6,4 +6,5 @@ use (
 	./3_adventure
 	./4_link
 	./5_sitemap
+	./6_task
 )
